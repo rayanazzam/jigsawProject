@@ -13,22 +13,18 @@ import java.io.File;
  */
 public class Frame extends JFrame {
 
-    private JTextField enterRow;
-    private JTextField enterColumn;
+    private JTextField enterRow, enterColumn;
     private JLabel mainLabel;
     private JLabel imgLabel;
+    private JLabel rowLabel, colLabel;
     private MainPuzzle puzzle;
-
-    // todo pass these as constructors to puzzle class
-    static int rowSize;
-    static int columnSize;
-    static BufferedImage source;
-
     private final int boxWidth = 1000;
     private final int boxHeight = 1000;
 
-    public Frame() {
+    // can only have one image object instantiated for the whole game
+    static BufferedImage source;
 
+    public Frame() {
         this.setBounds(0, 0, boxWidth, boxHeight);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
@@ -40,16 +36,26 @@ public class Frame extends JFrame {
         mainLabel.setBounds(boxWidth/10,boxHeight/5, boxWidth-250, boxHeight/10);
         this.add(mainLabel);
 
-        enterRow = new JTextField("ENTER ROW");
+        rowLabel = new JLabel ("Rows");
+        rowLabel.setFont(new Font("Georgia", Font.BOLD, 30));
+        rowLabel.setBounds(boxWidth/10 - 50, boxWidth/5 + 100, 150, 150);
+        this.add(rowLabel);
+
+        enterRow = new JTextField("4");
         enterRow.setHorizontalAlignment(JTextField.CENTER);
         enterRow.setFont(new Font ("Gerogia", Font.BOLD, 30));
-        enterRow.setBounds(boxWidth/10, boxHeight/5 + 150, 275, 75);
+        enterRow.setBounds(boxWidth/10 + 100, boxHeight/5 + 150, 150, 75);
         this.add(enterRow);
 
-        enterColumn = new JTextField("ENTER COLUMN");
+        colLabel = new JLabel ("Columns");
+        colLabel.setFont(new Font("Georgia", Font.BOLD, 30));
+        colLabel.setBounds(boxWidth/10 - 50, boxWidth/5 + 200, 150, 150);
+        this.add(colLabel);
+
+        enterColumn = new JTextField("3");
         enterColumn.setHorizontalAlignment(JTextField.CENTER);
         enterColumn.setFont(new Font ("Gerogia", Font.BOLD, 30));
-        enterColumn.setBounds(boxWidth/10, boxHeight/5 + 250, 275, 75);
+        enterColumn.setBounds(boxWidth/10 + 100, boxHeight/5 + 250, 150, 75);
         this.add(enterColumn);
 
         JButton loadImage = new JButton("LOAD IMAGE");
@@ -64,8 +70,7 @@ public class Frame extends JFrame {
                 FileNameExtensionFilter filter = new FileNameExtensionFilter("allow only image files to get loaded","png", "jpg");
                 fileChooser.addChoosableFileFilter(filter);
 
-                int returnVal = fileChooser.showOpenDialog(Frame.this);
-                if (returnVal == JFileChooser.APPROVE_OPTION){
+                if (fileChooser.showOpenDialog(Frame.this) == JFileChooser.APPROVE_OPTION){
                     File file = fileChooser.getSelectedFile();
                     try {
                         source = ImageIO.read(file);
@@ -90,9 +95,7 @@ public class Frame extends JFrame {
         btnStartPuzzle.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try{
-                    rowSize = Integer.parseInt(enterRow.getText());
-                    columnSize = Integer.parseInt(enterColumn.getText());
-                    puzzle = new MainPuzzle();
+                    puzzle = new MainPuzzle( Integer.parseInt(enterRow.getText()), Integer.parseInt(enterColumn.getText()));
                     puzzle.setTitle("MainPuzzle");
                     puzzle.setResizable(false);
                     puzzle.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -107,8 +110,6 @@ public class Frame extends JFrame {
         });
 
         this.add(btnStartPuzzle);
-
-
     }
     /***
      * private method to update font sizes of JFileChooser.

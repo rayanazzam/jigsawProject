@@ -1,7 +1,6 @@
 /***
  * Run the main method in this class to start playing
  */
-/
 
 public class GamePlay {
 
